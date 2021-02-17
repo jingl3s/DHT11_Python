@@ -71,7 +71,9 @@ class DHT11:
         # the_bytes[2]: temperature int
         # the_bytes[3]: temperature decimal
 
-        temperature = the_bytes[2] + float(the_bytes[3]) / 10
+        minus = ( the_bytes[3] & 128 ) is 128
+        the_bytes[3] = the_bytes[3] & 127
+        temperature = - ( the_bytes[2] + float(the_bytes[3]) / 10 ) if ( minus ) else the_bytes[2] + float(the_bytes[3]) / 10
         humidity = the_bytes[0] + float(the_bytes[1]) / 10
 
         return DHT11Result(DHT11Result.ERR_NO_ERROR, temperature, humidity)
